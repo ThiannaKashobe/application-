@@ -1,0 +1,23 @@
+{
+  "company": {"name": "Café Congo SARL", "activity": "Torréfaction & vente de café", "cash": 125000},
+  "stocks": [
+    {"product": "Arabica Kivu 250g", "quantity": 120, "threshold": 20},
+    {"product": "Robusta Nord 250g", "quantity": 2, "threshold": 20},
+    {"product": "Mélange Maison 250g", "quantity": 45, "threshold": 15},
+    {"product": "Capsules Espresso (10 pcs)", "quantity": 25, "threshold": 10}
+  ],
+  "sales": [
+    {"product": "Arabica Kivu 250g", "quantity": 10, "price": 2500},
+    {"product": "Mélange Maison 250g", "quantity": 5, "price": 2200},
+    {"product": "Capsules Espresso (10 pcs)", "quantity": 3, "price": 3500}
+  ],
+  "history": [
+    {"date": "2026-01-28", "revenue": 85000},
+    {"date": "2026-01-29", "revenue": 92000},
+    {"date": "2026-01-30", "revenue": 76000},
+    {"date": "2026-01-31", "revenue": 104000},
+    {"date": "2026-02-01", "revenue": 98000},
+    {"date": "2026-02-02", "revenue": 112000},
+    {"date": "2026-02-03", "revenue": 46500}
+  ]
+}

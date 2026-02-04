@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Dashboard — Suivi d'entreprise</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <h1 id="company-name">Café Congo SARL</h1>
+      <p class="muted" id="company-activity">Torréfaction & vente de café — Suivi opérationnel par le dirigeant</p>
+      <p class="muted" id="last-update">Dernière mise à jour : —</p>
+    </div>
+    <div class="actions">
+      <a id="help-btn" class="btn outline" href="about.html" target="_blank" rel="noopener noreferrer">À propos <span class="new-tab" aria-hidden="true">🔗</span><span class="sr-only">(ouvre dans un nouvel onglet)</span></a>
+      <button id="export-btn" class="btn">Exporter (PDF)</button>
+      <button id="share-btn" class="btn outline">Partager</button>
+    </div>
+  </header>
+
+  <div id="notice" class="card" style="display:none;margin-top:12px;padding:12px;background:linear-gradient(90deg,#fffef6,#fff);border-left:4px solid #f59e0b;color:#92400e;font-weight:600"></div>
+
+  <!-- (interface simple — sans modal ni bannière d'erreur) -->
+
+  <main class="grid">
+    <section class="card kpis">
+      <div class="kpi">
+        <div class="label">Chiffre d'affaires</div>
+        <div class="value" id="kpi-revenue">—</div>
+      </div>
+      <div class="kpi">
+        <div class="label">Ventes (unités)</div>
+        <div class="value" id="kpi-units">—</div>
+      </div>
+      <div class="kpi">
+        <div class="label">Trésorerie</div>
+        <div class="value" id="kpi-cash">—</div>
+      </div>
+      <div class="kpi">
+        <div class="label">Alertes</div>
+        <div class="value" id="kpi-alerts">0</div>
+      </div>
+    </section>
+
+    <section class="card chart">
+      <h2>Évolution CA (7 jours)</h2>
+      <canvas id="sales-chart" aria-label="Graphique des ventes" role="img"></canvas>
+    </section>
+
+    <section class="card table" id="sales-section">
+      <h2>Ventes récentes</h2>
+      <table id="sales-table">
+        <thead>
+          <tr><th>Produit</th><th>Quantité</th><th>Prix</th><th>Montant</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <section class="card table" id="stocks-section">
+      <h2>Stocks</h2>
+      <table id="stock-table">
+        <thead>
+          <tr><th>Produit</th><th>Quantité</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <div class="alerts" id="alerts"></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <small>Café Congo SARL — Prototype de suivi (torréfaction & vente de café). Réalisé par Cynthia Pembe Kashobe pour le test technique.</small>
+    <div class="about-inline">À propos : <strong>Prototype de suivi</strong>. <a href="about.html" id="open-about" target="_blank" rel="noopener">En savoir plus</a></div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

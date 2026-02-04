@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>À propos — Prototype Suivi d'entreprise</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <h1>Café Congo SARL — À propos</h1>
+      <p class="muted">Prototype de dashboard pour le suivi du CA, des ventes, de la trésorerie et des stocks.</p>
+    </div>
+    <div class="actions">
+      <a class="btn outline" href="index.html">Retour au tableau</a>
+    </div>
+  </header>
+
+  <main class="card" style="margin-top:20px; max-width:900px;">
+    <h2>Présentation</h2>
+    <p>Ce prototype permet de visualiser un tableau de bord simplifié pour un commerce (Café Congo SARL). Les données sont fournies localement via <code>data.json</code> et chargées par le navigateur.</p>
+
+    <h3>Utilisation</h3>
+    <ol>
+      <li>Servir le dossier via HTTP (nécessaire pour que <code>fetch('data.json')</code> fonctionne) : <code>python -m http.server 8000</code>.</li>
+      <li>Ouvrir <a href="http://localhost:8000">http://localhost:8000</a> dans le navigateur.</li>
+    </ol>
+
+    <h3>Note sur le Chiffre d'affaires</h3>
+    <p>Le graphique d'évolution utilise le champ <code>history</code> et les KPI sont calculés à partir de <code>sales</code>. Si <code>history</code> n'est pas actualisé, le graphique peut afficher une valeur différente du total des ventes : le prototype inclut maintenant une correction manuelle dans <code>data.json</code> ou peut synchroniser automatiquement la valeur du jour à partir des ventes.</p>
+
+    <h3>Contact</h3>
+    <p>Pour toute question : <a href="mailto:cynthiapembe11@gmail.com">cynthiapembe11@gmail.com</a></p>
+
+    <hr>
+    <p class="muted">Version du prototype : v1.0 — 2026-02-03</p>
+  </main>
+
+  <footer class="footer">
+    <small>Café Congo SARL — Prototype</small>
+  </footer>
+</body>
+</html>
