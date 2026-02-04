@@ -13,9 +13,12 @@ Cas d'utilisation concret : **Café Congo SARL** — torréfaction et vente de c
 - `rapport.md` : résumé professionnel à remettre
 
 ## Fonctionnalités clés
-- KPI (Chiffre d'affaires, Ventes, Trésorerie, Alertes)
+- KPI (Chiffre d'affaires, Ventes, Trésorerie, Dépenses, Résultat net, Alertes)
+- Suivi des dépenses (tableau, ajout local, KPI)
+- Gestion clients (liste, ajout local via formulaire)
 - Graphique CA sur 7 jours (ou graphique de vente par produit)
 - Tableaux détaillés (ventes, stocks) avec mise en évidence des stocks faibles
+- Notifications basiques (alertes navigateur pour stocks faibles, dépenses importantes)
 - Export PDF via l'option d'impression du navigateur
 - Rafraîchissement automatique (simulation temps réel)
 

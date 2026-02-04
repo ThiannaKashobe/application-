@@ -40,6 +40,14 @@
         <div class="value" id="kpi-cash">—</div>
       </div>
       <div class="kpi">
+        <div class="label">Dépenses</div>
+        <div class="value" id="kpi-expenses">—</div>
+      </div>
+      <div class="kpi">
+        <div class="label">Résultat net</div>
+        <div class="value" id="kpi-net">—</div>
+      </div>
+      <div class="kpi">
         <div class="label">Alertes</div>
         <div class="value" id="kpi-alerts">0</div>
       </div>
@@ -69,6 +77,30 @@
         <tbody></tbody>
       </table>
       <div class="alerts" id="alerts"></div>
+    </section>
+
+    <section class="card table" id="expenses-section">
+      <h2>Dépenses récentes <button id="add-expense-btn" class="btn outline" style="float:right">Ajouter</button></h2>
+      <table id="expenses-table">
+        <thead><tr><th>Date</th><th>Description</th><th>Montant</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <form id="add-expense-form" style="margin-top:12px;display:none">
+        <input type="date" id="expense-date" required>
+        <input type="text" id="expense-desc" placeholder="Description" required>
+        <input type="number" id="expense-amount" placeholder="Montant" required>
+        <button type="submit" class="btn">Enregistrer</button>
+      </form>
+    </section>
+
+    <section class="card table" id="clients-section">
+      <h2>Clients <span id="clients-count" class="muted" style="font-weight:600;margin-left:8px"></span> <button id="add-client-btn" class="btn outline" style="float:right">Ajouter</button></h2>
+      <ul id="clients-list" style="padding-left:18px"></ul>
+      <form id="add-client-form" style="margin-top:12px;display:none">
+        <input type="text" id="client-name" placeholder="Nom du client" required>
+        <input type="text" id="client-contact" placeholder="Contact (email ou téléphone)">
+        <button type="submit" class="btn">Ajouter</button>
+      </form>
     </section>
   </main>
 

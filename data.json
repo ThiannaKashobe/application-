@@ -19,5 +19,14 @@
     {"date": "2026-02-01", "revenue": 98000},
     {"date": "2026-02-02", "revenue": 112000},
     {"date": "2026-02-03", "revenue": 46500}
+  ],
+  "expenses": [
+    {"date": "2026-02-01", "description": "Achat grains", "amount": 25000},
+    {"date": "2026-02-02", "description": "Emballages", "amount": 6000},
+    {"date": "2026-02-03", "description": "Loyer", "amount": 30000}
+  ],
+  "clients": [
+    {"name": "Boutique Kin", "contact": "contact@boutiquekin.ci"},
+    {"name": "Restaurant Le Marché", "contact": "07 89 12 34"}
   ]
 }

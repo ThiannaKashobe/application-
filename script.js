@@ -25,6 +25,15 @@ const FALLBACK_DATA = {
     {date: '2026-02-01', revenue: 98000},
     {date: '2026-02-02', revenue: 112000},
     {date: '2026-02-03', revenue: 96000}
+  ],
+  expenses: [
+    {date: '2026-02-01', description: 'Achat grains', amount: 25000},
+    {date: '2026-02-02', description: 'Emballages', amount: 6000},
+    {date: '2026-02-03', description: 'Loyer', amount: 30000}
+  ],
+  clients: [
+    {name: 'Boutique Kin', contact: 'contact@boutiquekin.ci'},
+    {name: 'Restaurant Le Marché', contact: '07 89 12 34'}
   ]
 };
 
@@ -82,13 +91,19 @@ function renderPage(data){
   document.getElementById('last-update').textContent = 'Dernière mise à jour : ' + new Date().toLocaleString();
 
   // KPI
-  const totalRevenue = data.sales.reduce((s,x)=>s + (x.price * x.quantity),0);
-  const totalUnits = data.sales.reduce((s,x)=>s + x.quantity,0);
+  const totalRevenue = (data.sales || []).reduce((s,x)=>s + (x.price * x.quantity),0);
+  const totalUnits = (data.sales || []).reduce((s,x)=>s + x.quantity,0);
   const cash = data.company?.cash || 0;
+  const persistedExpenses = JSON.parse(localStorage.getItem('expenses') || 'null');
+  if(persistedExpenses && Array.isArray(persistedExpenses)) data.expenses = (data.expenses || []).concat(persistedExpenses);
+  const totalExpenses = (data.expenses || []).reduce((s,x)=>s + (x.amount || 0),0);
+  const netIncome = totalRevenue - totalExpenses;
 
   animateValue(document.getElementById('kpi-revenue'),0,totalRevenue);
   document.getElementById('kpi-units').textContent = totalUnits;
   animateValue(document.getElementById('kpi-cash'),0,cash);
+  animateValue(document.getElementById('kpi-expenses'),0,totalExpenses);
+  animateValue(document.getElementById('kpi-net'),0,netIncome);
 
   // Stocks
   const stockBody = document.querySelector('#stock-table tbody');
@@ -108,16 +123,44 @@ function renderPage(data){
   // Ventes
   const salesBody = document.querySelector('#sales-table tbody');
   salesBody.innerHTML = '';
-  data.sales.forEach(s=>{
+  (data.sales || []).forEach(s=>{
     const montant = s.price*s.quantity;
     const tr = document.createElement('tr');
     tr.innerHTML = `<td>${s.product}</td><td>${s.quantity}</td><td>${formatCurrency(s.price)}</td><td>${formatCurrency(montant)}</td>`;
     salesBody.appendChild(tr);
   });
 
+  // Dépenses
+  const expensesBody = document.querySelector('#expenses-table tbody');
+  expensesBody.innerHTML = '';
+  (data.expenses || []).forEach(e=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${e.date}</td><td>${e.description}</td><td>${formatCurrency(e.amount)}</td>`;
+    expensesBody.appendChild(tr);
+  });
+
+  // Clients
+  const clientsList = document.getElementById('clients-list');
+  clientsList.innerHTML = '';
+  const persistedClients = JSON.parse(localStorage.getItem('clients') || 'null');
+  const clients = (persistedClients && Array.isArray(persistedClients)) ? persistedClients : (data.clients || []);
+  clients.forEach(c=>{
+    const li = document.createElement('li');
+    li.textContent = `${c.name}${c.contact ? ' — ' + c.contact : ''}`;
+    clientsList.appendChild(li);
+  });
+  document.getElementById('clients-count').textContent = `(${clients.length})`;
+
   // Graphique
   const ctx = document.getElementById('sales-chart').getContext('2d');
   const hasHistory = Array.isArray(data.history) && data.history.length;
+  // Synchroniser le jour courant avec le total des ventes
+  const today = new Date().toISOString().slice(0,10);
+  if (!Array.isArray(data.history)) data.history = [];
+  const last = data.history[data.history.length - 1];
+  if (last && last.date === today) last.revenue = totalRevenue;
+  else data.history.push({date: today, revenue: totalRevenue});
+
   const chartData = hasHistory ? {
     labels: data.history.map(h=>h.date),
     datasets:[{label:'CA (jour)', data:data.history.map(h=>h.revenue), borderColor:'#7c3aed', backgroundColor:'rgba(124,58,237,0.12)', fill:true, tension:0.25}]
@@ -136,6 +179,54 @@ function renderPage(data){
       scales:{x:{grid:{display:false}},y:{grid:{color:'rgba(15,23,42,0.04)'}}}
     }
   });
+
+  // Notifications : alerte stocks faibles
+  if (lowStock.length) notify(`Stock faible (${lowStock.length})`, `${lowStock.map(x=>x.product).join(', ')}`);
+  // Notification si résultat négatif
+  if (netIncome < 0) notify('Résultat négatif', `Résultat net : ${formatCurrency(netIncome)}`);
+
+  // Setup event handlers for add forms
+  const addExpenseBtn = document.getElementById('add-expense-btn');
+  const addExpenseForm = document.getElementById('add-expense-form');
+  addExpenseBtn?.addEventListener('click',()=> addExpenseForm.style.display = addExpenseForm.style.display === 'none' ? 'block' : 'none');
+
+  addExpenseForm?.addEventListener('submit',(e)=>{
+    e.preventDefault();
+    const date = document.getElementById('expense-date').value;
+    const desc = document.getElementById('expense-desc').value;
+    const amount = Number(document.getElementById('expense-amount').value || 0);
+    const newExp = {date, description: desc, amount};
+    const persisted = JSON.parse(localStorage.getItem('expenses') || '[]');
+    persisted.push(newExp);
+    localStorage.setItem('expenses', JSON.stringify(persisted));
+    showNotice('Dépense ajoutée');
+    if (amount > 50000) notify('Dépense importante', `${desc} : ${formatCurrency(amount)}`);
+    renderPage(data);
+  });
+
+  const addClientBtn = document.getElementById('add-client-btn');
+  const addClientForm = document.getElementById('add-client-form');
+  addClientBtn?.addEventListener('click',()=> addClientForm.style.display = addClientForm.style.display === 'none' ? 'block' : 'none');
+  addClientForm?.addEventListener('submit',(e)=>{
+    e.preventDefault();
+    const name = document.getElementById('client-name').value;
+    const contact = document.getElementById('client-contact').value;
+    const persisted = JSON.parse(localStorage.getItem('clients') || '[]');
+    persisted.push({name, contact});
+    localStorage.setItem('clients', JSON.stringify(persisted));
+    showNotice('Client ajouté');
+    renderPage(data);
+  });
+}
+
+// Notification helper
+function notify(title, body){
+  if ('Notification' in window && Notification.permission === 'granted'){
+    try{ new Notification(title, {body}); }catch(e){ console.warn('Notification échouée', e); showNotice(body);} 
+  } else {
+    // fallback: afficher en bannière
+    showNotice(body);
+  }
 }
 
 // Export PDF
@@ -165,5 +256,10 @@ if(introModal){
 // Footer "En savoir plus" : lien direct vers about.html (géré par l'anchor target="_blank")
 
 // Initial load et refresh périodique
+// Demander la permission pour les notifications (si supportées)
+if ('Notification' in window && Notification.permission !== 'granted'){
+  try{ Notification.requestPermission(); }catch(e){ console.warn('Permission notification non supportée', e); }
+}
+
 fetchData();
 setInterval(fetchData, REFRESH_MS);
